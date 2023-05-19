@@ -1,0 +1,13 @@
+A chamada do comando 'make' cria o arquivo src/efibootmgr.
+efibootmgr deve ser colocado em /usr/sbin/.
+
+Atualmente, o efibootmgr requer o efivar versão 0.19, bem como o
+utilitário pkg-config, para ser construído. Se você receber uma
+mensagem como a seguinte:
+
+  src/include/efi.h:32:20: erro do sistema: efivar.h: Não existe arquivo ou diretório.
+
+então você não instalou essas dependências, que podem ser encontradas em:
+
+efivar: http://localhost/efivar
+pkg-config: http://localhost/pkgconfig

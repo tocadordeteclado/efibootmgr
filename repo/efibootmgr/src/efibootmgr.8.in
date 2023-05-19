@@ -1,0 +1,237 @@
+.TH "EFIBOOTMGR" "8" "02 Abril 2023" "" ""
+
+.SH NAME
+efibootmgr \- altere a configuração do UEFI Boot Manager
+.SH SYNOPSIS
+
+\fBefibootmgr\fR [ \fB-a\fR ] [ \fB-A\fR ] [ \fB-b \fIXXXX\fB\fR ] [ \fB-B\fR ] [ \fB-c\fR ] [ \fB-d \fIDISK\fB\fR ] [ \fB-D\fR ] [ \fB-e \fI1|3|-1\fB\fR ] [ \fB-E \fINUM\fB\fR ] [ \fB--full-dev-path\fR | \fB--file-dev-path\fR ] [ \fB-f\fR ] [ \fB-F\fR ] [ \fB-g\fR ] [ \fB-i \fINAME\fB\fR ] [ \fB-l \fINAME\fB\fR ] [ \fB-L \fILABEL\fB\fR ] [ \fB-m \fIt|f\fB\fR ] [ \fB-M \fIX\fB\fR ] [ \fB-n \fIXXXX\fB\fR ] [ \fB-N\fR ] [ \fB-o \fIXXXX\fB,\fIYYYY\fB,\fIZZZZ\fB\fR\fI ...\fR ] [ \fB-O\fR ] [ \fB-p \fIPART\fB\fR ] [ \fB-q\fR ] [ \fB-r\fR | \fB-y\fR ] [ \fB-t \fIseconds\fB\fR ] [ \fB-T\fR ] [ \fB-u\fR ] [ \fB-v\fR ] [ \fB-V\fR ] [ \fB-w\fR ] [ \fB-@ \fIfile\fB\fR ]
+
+.SH "DESCRIPTION"
+.PP
+\fBefibootmgr\fR é um aplicativo de espaço de usuário usado para modificar o UEFI Boot
+Manager. Este aplicativo pode criar e destruir entradas de inicialização, alterar a
+ordem de inicialização, alterar a próxima opção de inicialização em execução e muito
+mais.
+.PP
+Detalhes sobre o UEFI Boot Manager estão disponíveis no UEFI
+Especificação, v1.02 ou posterior, disponível em: http://www.uefi.org
+.sp
+.RS
+.B "Note:"
+efibootmgr requer que o kernel suporte acesso a variáveis não
+voláteis EFI por meio de
+\fI/sys/firmware/efi/vars\fR ou \fI/sys/firmware/efi/efivars/\fR.
+.RE
+.SH "OPTIONS"
+.PP
+A seguir está uma lista de opções aceitas por efibootmgr:
+.TP
+\fB-a | --active\fR
+Definir bootnum ativo.
+.TP
+\fB-A | --inactive\fR
+Definir bootnum inativo.
+.TP
+\fB-b | --bootnum \fIXXXX\fB\fR
+Modificar Boot\fIXXXX\fR (hex).
+.TP
+\fB-B | --delete-bootnum\fR
+Excluir bootnum.
+.TP
+\fB-c | --create\fR
+Crie uma nova variável bootnum e adicione ao bootorder.
+.TP
+\fB-C | --create-only\fR
+Crie uma nova variável bootnum e não adicione ao bootorder.
+.TP
+\fB-d | --disk \fIDISK\fB\fR
+O disco que contém o carregador (o padrão é
+\fI/dev/sda\fR).
+.TP
+\fB-D | --remove-dups\fR
+Remova entradas duplicadas de BootOrder.
+.TP
+\fB-e | --edd \fI1|3\fB\fR
+Força variáveis de criação EDD 1.0 ou 3.0.
+
+Use \fB-e 1\fR junto com \fB-E\fR se você estiver usando um sistema muito antigo que
+usa UEFI para inicializar, mas requer drivers de dispositivo legados CSM (BIOS) para
+dispositivos de armazenamento.
+
+\fB-e 3\fR agora está obsoleto e é um alias para \fB--full-dev-path\fR.
+.TP
+\fB-E | --edd-device \fINUM\fB\fR
+EDD 1.0 número do dispositivo (o padrão é 0x80).  Consulte \fB--edd\fR.
+.TP
+\fB--full-dev-path\fR
+A criação forçada de entradas de inicialização usa um caminho de dispositivo
+UEFI completo, começando na raiz PCIe ou equivalente na plataforma atual. O
+padrão é usar um caminho abreviado HD() baseado em disco rígido.
+
+Você não precisa usar esta opção, a menos que o firmware do sistema não
+inicialize do seu dispositivo usando um caminho de dispositivo HD()
+abreviado.
+
+Observe que forçar um caminho completo falhará se não soubermos qual é a raiz
+do dispositivo do sistema, como o dispositivo especificado está conectado a
+ele ou como codificar qualquer um deles.
+.TP
+\fB--file-dev-path\fR
+A criação forçada de entradas de inicialização usa um caminho de dispositivo UEFI
+abreviado que começa com a parte File() do caminho. O padrão é usar um caminho
+abreviado HD() baseado em disco rígido.
+.TP
+\fB-f | --reconnect \fR
+Reconecte os dispositivos após o driver ser carregado. Aplicável apenas para entradas de driver.
+.TP
+\fB-F | --do-not-reconnect \fR
+Não reconecte os dispositivos após o driver ser carregado. Aplicável apenas para entradas de driver.
+.TP
+\fB-g | --gpt\fR
+Força o disco com PMBR inválido a ser tratado como GPT.
+.TP
+\fB-i | --iface \fINAME\fB\fR
+Crie uma entrada netboot para a interface nomeada.
+.TP
+\fB-k | --keep \fINAME\fB\fR
+Mantenha as entradas antigas ao ajustar a ordem.
+.TP
+\fB-l | --loader \fINAME\fB\fR
+Especifique um carregador (o padrão é \fI@@DEFAULT_LOADER@@\fR).
+.TP
+\fB-L | --label \fILABEL\fB\fR
+Rótulo de exibição do gerenciador de inicialização (o padrão é "Linux").
+.TP
+\fB-m | --mirror-below-4G \fIt|f\fB\fR
+Defina t se quiser espelhar a memória abaixo 4GB.
+.TP
+\fB-M | --mirror-above-4G \fIX\fB\fR
+X porcentagem de memória para espelhar acima de 4 GB. Valor de ponto flutuante com até 2 casas decimais é aceito.
+.TP
+\fB-n | --bootnext \fIXXXX\fB\fR
+Definir BootNext para XXXX (hex).
+.TP
+\fB-N | --delete-bootnext\fR
+Remover BootNext.
+.TP
+\fB-o | --bootorder \fIXXXX\fB,\fIYYYY\fB,\fIZZZZ\fB\fR
+Defina explicitamente BootOrder (hex). Qualquer valor de 0 a FFFF é aceito desde que corresponda a uma variável Boot#### existente e o preenchimento com zeros não seja necessário.
+.TP
+\fB-O | --delete-bootorder\fR
+Remover BootOrder.
+.TP
+\fB-p | --part \fIPART\fB\fR
+Número da partição que contém o bootloader (o padrão é 1).
+.TP
+\fB-q | --quiet\fR
+Modo silencioso - suprime a saída.
+.TP
+\fB-r | --driver\fR
+Opere nas variáveis Driver#### em vez das variáveis Boot####.
+.TP
+\fB-t | --timeout \fIseconds\fB\fR
+Tempo limite do gerenciador de inicialização, em \fIsegundos\fR\&.
+.TP
+\fB-T | --delete-timeout\fR
+Exclua a variável Timeout.
+.TP
+\fB-u | --unicode | --UCS-2 \fR
+Lide com argumentos de linha de comando extras como UCS-2 (o padrão é
+ASCII).
+.TP
+\fB-v | --verbose\fR
+Modo detalhado - imprime informações adicionais.
+.TP
+\fB-V | --version\fR
+Basta imprimir a string da versão e sair.
+.TP
+\fB-w | --write-signature\fR
+Escreva uma assinatura exclusiva no MBR, se necessário.
+.TP
+\fB-y | --sysprep\fR
+Opere em variáveis SysPrep#### em vez de variáveis Boot####.
+.TP
+\fB-@ | --append-binary-args \fR
+Acrescente args variáveis extras do arquivo (use - para
+ler do stdin). Os dados no arquivo são anexados como argumentos de
+linha de comando ao comando do carregador de inicialização, sem nenhuma
+modificação nos dados, para que você possa passar quaisquer dados binários
+ou de texto necessários.
+.SH "EXAMPLES"
+\fR
+.SS "Exibindo as configurações atuais (deve ser root):"
+\fR
+.nf
+.B
+[root@localhost ~]# efibootmgr
+BootCurrent: 0004
+BootNext: 0003
+BootOrder: 0004,0000,0001,0002,0003
+Timeout: 30 seconds
+Boot0000* Diskette Drive(device:0)
+Boot0001* CD-ROM Drive(device:FF)
+Boot0002* Hard Drive(Device:80)/HD(Part1,Sig00112233)
+Boot0003* PXE Boot: MAC(00D0B7C15D91)
+Boot0004* Linux
+.fi
+.PP
+Cada um dos itens acima são variáveis de inicialização, que são definidas da seguinte forma:
+.RS
+.TP 0.2i
+\(bu
+BootCurrent - a entrada de inicialização usada para iniciar o sistema
+atualmente em execução.
+.TP 0.2i
+\(bu
+BootOrder - a ordem de inicialização como apareceria no gerenciador de inicialização.
+O gerenciador de inicialização tenta inicializar a primeira entrada ativa nesta lista.
+Se malsucedido, ele tenta a próxima entrada e assim por diante.
+.TP 0.2i
+\(bu
+BootNext - a entrada de inicialização que está programada para ser executada na
+próxima inicialização. Isso substitui BootOrder apenas para uma inicialização e é
+excluído pelo gerenciador de inicialização após o primeiro uso. Isso permite que
+você altere o próximo comportamento de inicialização sem alterar o BootOrder.
+.TP 0.2i
+\(bu
+Timeout - o tempo em segundos entre quando o gerenciador de inicialização aparece
+na tela até quando ele escolhe automaticamente o valor de inicialização de BootNext
+ou BootOrder.
+.TP 0.2i
+\(bu
+Cinco entradas de inicialização (0000 - 0004), juntamente com o sinalizador
+ativo/inativo (* significa ativo) e o nome exibido na tela.
+.RE
+.SS "Criando uma nova opção de inicialização"
+Um instalador de sistema operacional chamaria \fBefibootmgr -c\fR\&.
+Isso pressupõe que \fI/dev/sda1\fR é sua partição de sistema EFI e
+está montada em \fI/boot/efi\fR\&. Isso cria uma nova opção de
+inicialização, chamada "Linux", e a coloca no topo da lista de
+ordem de inicialização. Opções podem ser passadas para modificar
+o comportamento padrão. O OS Loader padrão é \fI@@DEFAULT_LOADER@@\fR\&.
+.SS "Alterando a ordem de inicialização"
+Assumindo a configuração do primeiro exemplo,
+\fBefibootmgr -o 3,4\fR pode ser chamado para especificar a inicialização
+PXE primeiro, depois a inicialização do Linux.
+.SS "Alterar a ordem de inicialização apenas para a próxima inicialização"
+Assumindo a configuração do primeiro exemplo,
+\fBefibootmgr -n 4\fR pode ser chamado para especificar que a entrada do
+Linux será executada na próxima inicialização.
+.SS "Excluindo uma opção de inicialização"
+Assumindo a configuração do primeiro exemplo,
+\fBefibootmgr -b 4 -B\fR pode ser chamado para excluir a entrada 4 e
+removê-la do BootOrder.
+.SS "Criando entradas de inicialização de rede"
+Um administrador de sistema deseja criar uma opção de inicialização para
+inicialização de rede. Você cria a entrada de inicialização com:
+\fBefibootmgr -c -i eth0 -L netboot [ -l '\\filename.efi' ]\fR
+.SH "BUGS"
+.PP
+Por favor, encaminhe quaisquer bugs, recursos, patches, etc. para http://localhost/efibootmgr \&.
+.SH "AUTHOR"
+.PP
+Esta página de manual foi gerada por Jorge Luiz <tjxjorge@gmail.com> para
+o sistema, mas pode ser usado por outros.
+.PP
+Posteriormente, foi modificado por Jorge Luiz <tjxjorge@gmail.com> para
+o projeto efibootmgr.

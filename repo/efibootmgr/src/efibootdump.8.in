@@ -1,0 +1,32 @@
+.TH "EFIBOOTDUMP" "8" "02 Abril 2023" "" ""
+
+.SH NAME
+efibootdump \- Despejar uma entrada de inicialização de uma variável ou arquivo
+.SH SYNOPSIS
+
+\fBefibootdump\fR [\fB-?\fR|\fB--help\fR] [\fB--usage\fR]
+.br
+    [\fB-f\fR \fI<file1>\fR [... \fB-f\fR \fI<fileN>\fR]]
+.br
+    [[\fB-g\fR \fI{guid}\fR] \fI<name0>\fR [... [\fI<nameN>\fR]]]
+.SH "DESCRIPTION"
+.PP
+\fBefibootdump\fR é um aplicativo de espaço de usuário usado para exibir opções individuais de inicialização UEFI, de um arquivo ou uma variável UEFI. Isso permite, por ex. arquivos salvos de efivarfs para serem exibidos, bem como variáveis na máquina de corrida.
+
+.SH "OPTIONS"
+A seguir está uma lista de opções aceitas por efibootmgr:
+.TP
+\fB-g | --guid\fR \fI{guid}\fR
+Quaisquer variáveis especificadas por nome têm o GUID especificado.
+.TP
+\fB-f | --file\fR \fI<file>\fR
+Lê uma única variável de inicialização do arquivo especificado.
+.TP
+\fI<nameN>\fR
+Exiba a variável especificada na máquina local. Se nenhum GUID for especificado, a EFI Global Variable será o padrão.
+.SH "BUGS"
+.PP
+Por favor, encaminhe quaisquer bugs, recursos, patches, etc. para a equipe de bootloader do sistema em http://localhost/efibootmgr \&.
+.SH "SEE ALSO"
+.PP
+efibootmgr(8)

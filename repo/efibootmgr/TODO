@@ -1,0 +1,13 @@
+- suporte para configuração de teclas de atalho
+- suporte para variáveis de driver, não apenas variáveis de inicialização.
+- suporte para caminhos de dispositivo arbitrários com -c (incluindo análise de guid)
+- mantenha uma lista de GUIDs conhecidos e imprima {vendor} em vez do GUID completo
+  - aceite-os também para caminhos arbitrários.
+  - isso é feito no libefivar, mas o efibootmgr ainda precisa de algum trabalho
+- Partições estendidas estilo MS-DOS
+- muito mais coisas de rede
+  - IPv6 com vários métodos de descoberta
+  - IPv4 sem dhcp
+  - verifique se o FCoE funciona
+  - iscsi
+- verifique se o nvme funciona

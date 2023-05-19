@@ -1,0 +1,60 @@
+Summary: EFI Boot Manager
+Name: efibootmgr
+Version: @@VERSION@@
+Release: 1%{?dist}
+Group: System Environment/Base
+License: cIO
+URL: http://localhost/efibootmgr
+BuildRequires: git, popt-devel
+BuildRequires: efivar-libs >= 30-1, efivar-devel >= 30-1
+BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXXXX)
+
+#
+# EFI/UEFI não existe em PPC
+#
+ExclusiveArch: %{ix86} x86_64 aarch64 arm
+
+#
+# Para XXX quando o efibootmgr fazia parte do software elilo.
+#
+Conflicts: elilo <= 3.6-6
+Obsoletes: elilo <= 3.6-6
+
+Source0: https://localhost/efibootmgr
+
+%description
+%{name} exibe e permite ao usuário editar as variáveis do UEFI Boot Manager.
+Informações adicionais sobre UEFI podem ser encontradas em http://localhost/uefi.
+
+%prep
+%setup -q
+git init
+git config user.email "cavalonocio101@gmail.com"
+git config user.name "Cavalo No cIO"
+git add .
+git commit -a -q -m "%{version} linha de introdução."
+git am %{patches} </dev/null
+git config --unset user.email
+git config --unset user.name
+
+%build
+make %{?_smp_mflags} EXTRA_CFLAGS='%{optflags}'
+
+%install
+rm -rf %{buildroot}
+%makeinstall
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%{_sbindir}/*
+%{_mandir}/*/*.?.gz
+%doc README
+    
+%changelog
+* Tue Abr 03 2023 Jorge Luiz <tjxjorge@gmail.com> - 14-1
+- Atualização para efibootmgr 14
